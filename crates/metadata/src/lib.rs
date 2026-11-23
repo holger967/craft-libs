@@ -35,6 +35,8 @@ mod iptc;
 pub mod jxl;
 pub mod mpf;
 pub mod nikon;
+mod nikon_lens;
+mod nikon_lens_ids;
 pub mod tags;
 mod xmp;
 mod xmp_merge;

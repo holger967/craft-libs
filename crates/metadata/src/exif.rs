@@ -34,6 +34,10 @@ pub fn try_read_exif_with(bytes: &[u8], opts: &ParseOptions) -> Result<Metadata,
     if m.lens_model.is_none() {
         m.lens_model = panasonic_lens(data, &tiff).or_else(|| canon_maker_note_lens(data, &tiff));
     }
+    // Nikon DSLRs name no lens at all: the LensID in their maker note does
+    if m.lens_model.is_none() {
+        m.lens_model = nikon.as_ref().and_then(|n| crate::nikon_lens::lens_name(&n.ifd, m.model.as_deref()));
+    }
     fill_from_panasonic_raw(&mut m, data, &tiff, opts);
     // the maker note's values are offsets into the stream, which `from_tiff` doesn't have
     m.focus = match &nikon {
