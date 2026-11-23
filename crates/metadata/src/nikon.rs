@@ -465,6 +465,7 @@ pub fn rows(note: &Ifd, order: ByteOrder, model: Option<&str>) -> Vec<TagRow> {
     if let Some([short, long, wide, narrow]) = lens_spec(note) {
         push(LENS, "Lens", Some(format!("{} mm f/{}", range(short, long), range(wide, narrow))));
     }
+    push(0x0098, "Lens ID", crate::nikon_lens::lens_name(note, model));
     if let Some(bits) = num(LENS_TYPE).and_then(|v| u8::try_from(v).ok()) {
         // no bit set: an autofocus lens of none of the named kinds
         let names: Vec<&str> = LENS_TYPE_BITS.iter().filter(|(b, _)| bits >> b & 1 == 1).map(|(_, n)| *n).collect();
